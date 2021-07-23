@@ -92,14 +92,12 @@ qg8_file_iterator(qg8_file *qg8f)
 
 	if (!qg8f)
 	{
-		fprintf(stderr, "Cannot get iterator for NULL file.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get iterator for NULL file.\n");
 	}
 
 	if (qg8f->mode != QG8_MODE_READ)
 	{
-		fprintf(stderr, "Cannot get iterator for file open in write mode.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get iterator for file open in write mode.\n");
 	}
 
 	i.offset = sizeof(qg8_file_header);
@@ -113,14 +111,12 @@ qg8_file_has_next(qg8_iter *i)
 {
 	if (!i)
 	{
-		fprintf(stderr, "Cannot iterate over file with a NULL iterator.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot iterate over file with a NULL iterator.\n");
 	}
 	/* TODO: dead/redundant error? */
 	if (i->f->mode != QG8_MODE_READ)
 	{
-		fprintf(stderr, "Cannot iterate over file open in write mode.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot iterate over file open in write mode.\n");
 	}
 
 	fseek(i->f->fp, 0, SEEK_END);
@@ -170,21 +166,18 @@ qg8_file_extract(qg8_iter *iter)
 	/* return nothing on no iterator */
 	if (!iter)
 	{
-		fprintf(stderr, "Cannot iterate over file with a NULL iterator.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot iterate over file with a NULL iterator.\n");
 	}
 	/* TODO: dead/redundant error? */
 	if (iter->f->mode != QG8_MODE_READ)
 	{
-		fprintf(stderr, "Cannot iterate over file open in write mode.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot iterate over file open in write mode.\n");
 	}
 
 	fseek(iter->f->fp, iter->offset, SEEK_SET);
 	if (feof(iter->f->fp))
 	{
-		fprintf(stderr, "Cannot extract chunk due to unhandled EOF.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot extract chunk due to unhandled EOF.\n");
 	}
 	chunk = (qg8_chunk *) malloc(sizeof(qg8_chunk));
 	ALLOC(chunk);

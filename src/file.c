@@ -49,19 +49,18 @@ _integrity_check(qg8_file *qg8f)
 	if (memcmp(sig, "QG8", 3) != 0)
 	{
 		fprintf(stderr, "Invalid magic string '%s'\n", sig);
-		return 0;
+		exit(EXIT_FAILURE);
 	}
 	else if (version < 1 || version > QG8_VERSION)
 	{
 		fprintf(stderr, "Unsupported file version %d\n", version);
-		return 0;
+		exit(EXIT_FAILURE);
 	}
 	for (i = 0; i < 6; ++i)
 	{
 		if (*(res+i) != 0)
 		{
-			fprintf(stderr, "Reserved file header bytes are not 0\n");
-			return 0;
+			DIE("Reserved file header bytes are not 0\n");
 		}
 	}
 	return 1;
@@ -75,8 +74,7 @@ qg8_file_open(const char *filename,
 
 	if (!filename)
 	{
-		fprintf(stderr, "Cannot open a NULL file.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot open a NULL file.\n");
 	}
 
 	if (mode != QG8_MODE_READ && mode != QG8_MODE_WRITE/* &&
@@ -125,20 +123,17 @@ qg8_file_write_chunk(qg8_file *qg8f,
 
 	if (!qg8f)
 	{
-		fprintf(stderr, "Cannot write chunk to a NULL file.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot write chunk to a NULL file.\n");
 	}
 
 	if (!chunk)
 	{
-		fprintf(stderr, "Cannot write NULL chunk to a file.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot write NULL chunk to a file.\n");
 	}
 
 	if (qg8f->mode == QG8_MODE_READ)
 	{
-		fprintf(stderr, "Cannot write to a file open in read mode.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot write to a file open in read mode.\n");
 	}
 
 	node = (qg8_chunk_linkedlist *) malloc(sizeof(qg8_chunk_linkedlist));
@@ -202,8 +197,7 @@ qg8_file_flush(qg8_file *qg8f)
 
 	if (!qg8f)
 	{
-		fprintf(stderr, "Cannot flush to a NULL file.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot flush to a NULL file.\n");
 	}
 
 	/* preparation */
@@ -219,8 +213,7 @@ qg8_file_flush(qg8_file *qg8f)
 	}
 	else
 	{
-		fprintf(stderr, "Cannot write to a file open in read mode.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot write to a file open in read mode.\n");
 	}
 
 	/* tensors */
@@ -379,8 +372,7 @@ qg8_file_close(qg8_file *qg8f)
 
 	if (!qg8f)
 	{
-		fprintf(stderr, "Cannot close a NULL file.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot close a NULL file.\n");
 	}
 
 	tlist = qg8f->chunks;

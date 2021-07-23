@@ -60,8 +60,7 @@ qg8_chunk_destroy(qg8_chunk *chunk)
 {
 	if (!chunk)
 	{
-		fprintf(stderr, "Cannot destroy a NULL chunk.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot destroy a NULL chunk.\n");
 	}
 	if (chunk->tensor)
 		qg8_tensor_destroy(chunk->tensor);
@@ -74,8 +73,7 @@ qg8_chunk_get_tensor(qg8_chunk *chunk)
 {
 	if (!chunk)
 	{
-		fprintf(stderr, "Cannot get tensor from a NULL chunk.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get tensor from a NULL chunk.\n");
 	}
 	return chunk->tensor;
 }
@@ -85,8 +83,7 @@ qg8_chunk_get_flags(qg8_chunk *chunk)
 {
 	if (!chunk)
 	{
-		fprintf(stderr, "Cannot get flags from a NULL chunk.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get flags from a NULL chunk.\n");
 	}
 	return chunk->flags;
 }
@@ -96,8 +93,7 @@ qg8_chunk_get_string_id(qg8_chunk *chunk)
 {
 	if (!chunk)
 	{
-		fprintf(stderr, "Cannot get string id from a NULL chunk.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get string id from a NULL chunk.\n");
 	}
 	return chunk->string_id;
 }
@@ -107,8 +103,7 @@ qg8_chunk_get_type(qg8_chunk *chunk)
 {
 	if (!chunk)
 	{
-		fprintf(stderr, "Cannot get chunk type from a NULL chunk.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get chunk type from a NULL chunk.\n");
 	}
 	return chunk->type;
 }

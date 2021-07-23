@@ -147,8 +147,7 @@ qg8_graph_load(const char *filename)
 
 	if (!filename)
 	{
-		fprintf(stderr, "Cannot load graph with a NULL filename.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot load graph with a NULL filename.\n");
 	}
 	file = qg8_file_open(filename, QG8_MODE_READ);
 
@@ -161,8 +160,7 @@ qg8_graph_load(const char *filename)
 		if (!chunk || qg8_graph_add_chunk(g, chunk) != 1)
 		{
 			qg8_graph_destroy(g);
-			fprintf(stderr, "Failed to load chunk into graph.\n");
-			exit(EXIT_FAILURE);
+			DIE("Failed to load chunk into graph.\n");
 		}
 		/*if (chunk->type != QG8_NTYPE_ADJACENCYMATRIX)
 		{
@@ -201,13 +199,11 @@ qg8_graph_write(const char *filename,
 
 	if (!filename)
 	{
-		fprintf(stderr, "Cannot write graph to file with NULL filename.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot write graph to file with NULL filename.\n");
 	}
 	if (!graph)
 	{
-		fprintf(stderr, "Cannot write a NULL graph to a file.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot write a NULL graph to a file.\n");
 	}
 
 	qg8f = qg8_file_open(filename, QG8_MODE_WRITE);
@@ -247,8 +243,7 @@ qg8_graph_get_number_chunks(qg8_graph *graph)
 	qg8_chunk_linkedlist *l;
 	if (!graph || !graph->chunks)
 	{
-		fprintf(stderr, "Cannot get number of chunks from a NULL graph.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get number of chunks from a NULL graph.\n");
 	}
 	i = 0;
 	l = graph->chunks;
@@ -267,8 +262,7 @@ qg8_graph_get_chunk(qg8_graph *graph,
 	qg8_chunk_linkedlist *l;
 	if (!graph)
 	{
-		fprintf(stderr, "Cannot get chunk from a NULL graph.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get chunk from a NULL graph.\n");
 	}
 	l = graph->chunks;
 	while (l)
@@ -307,13 +301,11 @@ qg8_graph_remove_chunk(qg8_graph *graph,
 
 	if (!graph)
 	{
-		fprintf(stderr, "Cannot remove chunk from NULL graph.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot remove chunk from NULL graph.\n");
 	}
 	if (!chunk)
 	{
-		fprintf(stderr, "Cannot remove NULL chunk from graph.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot remove NULL chunk from graph.\n");
 	}
 
 	l = graph->chunks;
@@ -347,8 +339,7 @@ qg8_graph_destroy(qg8_graph *graph)
 
 	if (!graph)
 	{
-		fprintf(stderr, "Cannot destroy a NULL graph\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot destroy a NULL graph\n");
 	}
 	/*if (graph->adjchunk)
 	{

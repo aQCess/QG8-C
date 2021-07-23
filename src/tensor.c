@@ -92,30 +92,25 @@ _common_create(qg8_tensor *t,
 	t->loaded = 0;
 	if (!indices)
 	{
-		fprintf(stderr, "Cannot create tensor with NULL indices.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot create tensor with NULL indices.\n");
 	}
 	if (!re)
 	{
-		fprintf(stderr, "Cannot create tensor with NULL real component.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot create tensor with NULL real component.\n");
 	}
 	if (!shape)
 	{
-		fprintf(stderr, "Cannot create tensor with NULL dimensions.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot create tensor with NULL dimensions.\n");
 	}
 	if (rank < 1)
 	{
-		fprintf(stderr, "Cannot create tensor with rank 0.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot create tensor with rank 0.\n");
 	}
 	for (i = 0; i < rank; ++i)
 	{
 		if (*(shape+i) == 0)
 		{
-			fprintf(stderr, "Cannot create tensor with 0 dimension.\n");
-			exit(EXIT_FAILURE);
+			DIE("Cannot create tensor with 0 dimension.\n");
 		}
 	}
 	t->rank = rank;
@@ -213,8 +208,7 @@ qg8_tensor_destroy(qg8_tensor *t)
 
 	if (!t)
 	{
-		fprintf(stderr, "Cannot destroy a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot destroy a NULL tensor.\n");
 	}
 
 	if (t->loaded)
@@ -241,8 +235,7 @@ qg8_tensor_get_rank(qg8_tensor *t)
 {
 	if (!t)
 	{
-		fprintf(stderr, "Cannot get rank from a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get rank from a NULL tensor.\n");
 	}
 	return t->rank;
 }
@@ -252,8 +245,7 @@ qg8_tensor_get_indices(qg8_tensor *t)
 {
 	if (!t)
 	{
-		fprintf(stderr, "Cannot get indices from a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get indices from a NULL tensor.\n");
 	}
 	return t->indices;
 }
@@ -263,8 +255,7 @@ qg8_tensor_get_num_elems(qg8_tensor *t)
 {
 	if (!t)
 	{
-		fprintf(stderr, "Cannot get number of elements from a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get number of elements from a NULL tensor.\n");
 	}
 	return t->num_elems;
 }
@@ -274,8 +265,7 @@ qg8_tensor_get_dtypeid(qg8_tensor *t)
 {
 	if (!t)
 	{
-		fprintf(stderr, "Cannot get data type from a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get data type from a NULL tensor.\n");
 	}
 	return t->dtype_id;
 }
@@ -285,8 +275,7 @@ qg8_tensor_get_itypeid(qg8_tensor *t)
 {
 	if (!t)
 	{
-		fprintf(stderr, "Cannot get index type from a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get index type from a NULL tensor.\n");
 	}
 	return t->itype_id;
 }
@@ -296,8 +285,7 @@ qg8_tensor_get_dims(qg8_tensor *t)
 {
 	if (!t)
 	{
-		fprintf(stderr, "Cannot get dimensions from a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get dimensions from a NULL tensor.\n");
 	}
 	return t->dimensions;
 }
@@ -307,8 +295,7 @@ qg8_tensor_get_re(qg8_tensor *t)
 {
 	if (!t)
 	{
-		fprintf(stderr, "Cannot get real data from a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get real data from a NULL tensor.\n");
 	}
 	switch (t->dtype_id)
 	{
@@ -344,8 +331,7 @@ qg8_tensor_get_im(qg8_tensor *t)
 {
 	if (!t)
 	{
-		fprintf(stderr, "Cannot get imaginary data from a NULL tensor.\n");
-		exit(EXIT_FAILURE);
+		DIE("Cannot get imaginary data from a NULL tensor.\n");
 	}
 	if (t->dtype_id == QG8_DTYPE_COMPLEX128)
 		return (void *) t->imdouble;

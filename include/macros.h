@@ -33,6 +33,8 @@
 #define READN(x,y,z) _size_check(fread(x, 1, y, z), y, __LINE__)
 #define READ(x,y,z) _size_check(fread(x, 1, sizeof(y), z), sizeof(y), __LINE__)
 
+#define DIE(x) fprintf(stderr, x); exit(EXIT_FAILURE);
+
 #define ALLOC(x) if (!x) { perror("malloc"); exit(EXIT_FAILURE); }
 
 #define SHAPER(x,y,z) \
