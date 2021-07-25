@@ -32,8 +32,9 @@ STATIC_LIB:=libqg8.a.$(VERSION)
 LINK_LIB:=libqg8.so
 DYNAMIC_LIB:=$(LINK_LIB).$(VERSION)
 
-TEST_SOURCES:=$(wildcard test/*.c)
+TEST_SOURCES:=$(wildcard test/*/*.c)
 TEST_BINARIES:=$(patsubst %.c,%,$(TEST_SOURCES))
+TEST_INCLUDE:=-Itest
 
 all: $(OBJECTS)
 	mkdir -p build
@@ -65,7 +66,8 @@ uninstall:
 test: $(TEST_BINARIES)
 
 test/%: test/%.c
-	$(CC) -g $(CCFLAGS) $(CXXFLAGS) $(INCLUDE) $(OBJECTS) $(LDFLAGS) $< -o $@
+	$(CC) -g $(CCFLAGS) $(CXXFLAGS) $(INCLUDE) $(TEST_INCLUDE) $(OBJECTS) \
+	$(LDFLAGS) $< -o $@
 
 clean:
 	rm -rf build obj $(BINARY) $(TEST_BINARIES)

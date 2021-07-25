@@ -29,6 +29,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define STRINGIFY(x) #x
+
 #define READNN(x,y,z,w) _size_check(fread(x, y, z, w), z, __LINE__)
 #define READN(x,y,z) _size_check(fread(x, 1, y, z), y, __LINE__)
 #define READ(x,y,z) _size_check(fread(x, 1, sizeof(y), z), sizeof(y), __LINE__)
