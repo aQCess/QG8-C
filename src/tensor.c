@@ -225,6 +225,22 @@ qg8_tensor_destroy(qg8_tensor *t)
 			free(t->refloat);
 		if (t->imfloat)
 			free(t->imfloat);
+		if (t->reu8)
+			free(t->reu8);
+		if (t->reu16)
+			free(t->reu16);
+		if (t->reu32)
+			free(t->reu32);
+		if (t->reu64)
+			free(t->reu64);
+		if (t->rei8)
+			free(t->rei8);
+		if (t->rei16)
+			free(t->rei16);
+		if (t->rei32)
+			free(t->rei32);
+		if (t->rei64)
+			free(t->rei64);
 	}
 	free(t);
 	return 1;

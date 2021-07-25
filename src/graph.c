@@ -176,6 +176,7 @@ qg8_graph_load(const char *filename)
 	/*if (!adjchunk)
 	{}*/ /* TODO: no adjacency matrix (create one?) */
 	/*g->adjchunk = adjchunk;*/
+	qg8_file_close(file);
 	return g;
 }
 
