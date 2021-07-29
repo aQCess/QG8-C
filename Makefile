@@ -6,14 +6,14 @@
 #
 
 # set DEBUG to 1 to turn on verbose messages
-DEBUG:=0
+DEBUG:=1
 
 PREFIX:=/usr/local
 VERSION:=1.0.0
 LIBRARIES:=gsl
 
 CC:=cc
-CCFLAGS:=--std=c89 -Wno-error=stringop-truncation
+CCFLAGS:=--std=c89# -Wno-error=stringop-truncation
 #-fsanitize=address -fno-omit-frame-pointer
 CXXFLAGS:=-Wall -Wextra -Wpedantic -Werror --pedantic-errors \
           -fPIC -O3 -DVERSION=\"${VERSION}\"
