@@ -58,7 +58,7 @@ main(int argc,
 		c = qg8_graph_get_chunk(g, 0);
 		t = qg8_chunk_get_tensor(c);
 		dims = (uint64_t *) qg8_tensor_get_dims(t);
-	, qg8_chunk_get_type(c) == QG8_TYPE_CONSTANT &&
+	, qg8_chunk_get_type(c) == QG8_TYPE_INPUT &&
 	  qg8_chunk_get_flags(c) == QG8_FLAG_LABEL &&
 	  memcmp(qg8_chunk_get_string_id(c), "~this\\label%is!t", 16) == 0 &&
 	  t != NULL &&
@@ -66,10 +66,10 @@ main(int argc,
 	  qg8_tensor_get_dtypeid(t) == QG8_DTYPE_COMPLEX128 &&
 	  qg8_tensor_get_rank(t) == 2 &&
 	  dims[0] == 64 && dims[1] == 64 &&
-	  qg8_tensor_get_num_elems(t) == 3099
+	  qg8_tensor_get_num_elems(t) == 3120
 	, "chunk 1 verify"
 	  /*chunk:
-	    type: QG8_TYPE_CONSTANT
+	    type: QG8_TYPE_INPUT
 	    flags: QG8_FLAG_LABEL
 	    name: ~this\label%is!t
 	    tensor:
@@ -77,14 +77,14 @@ main(int argc,
 	      dtype: QG8_DTYPE_COMPLEX128
 	      rank: 2
 	      dimensions: 64x64
-	      num elements: 3099*/
+	      num elements: 3120*/
 	);
 
 	TEST(
 		c = qg8_graph_get_chunk(g, 1);
 		t = qg8_chunk_get_tensor(c);
 		dims = (uint64_t *) qg8_tensor_get_dims(t);
-	, qg8_chunk_get_type(c) == QG8_TYPE_KET &&
+	, qg8_chunk_get_type(c) == QG8_TYPE_CONSTANT &&
 	  qg8_chunk_get_flags(c) == 0 &&
 	  t != NULL &&
 	  qg8_tensor_get_itypeid(t) == QG8_DTYPE_UINT8 &&
@@ -95,7 +95,7 @@ main(int argc,
 	  qg8_tensor_get_num_elems(t) == 720
 	, "chunk 2 verify"
 	  /*chunk:
-	    type: QG8_TYPE_KET
+	    type: QG8_TYPE_CONSTANT
 	    flags: nil
 	    tensor:
 	      itype: QG8_DTYPE_UINT8
@@ -109,7 +109,7 @@ main(int argc,
 		c = qg8_graph_get_chunk(g, 2);
 		t = qg8_chunk_get_tensor(c);
 		dims = (uint64_t *) qg8_tensor_get_dims(t);
-	, qg8_chunk_get_type(c) == QG8_TYPE_KET &&
+	, qg8_chunk_get_type(c) == QG8_TYPE_CONSTANT &&
 	  qg8_chunk_get_flags(c) == QG8_FLAG_LABEL &&
 	  memcmp(qg8_chunk_get_string_id(c), "2D dense array\0\0", 16) == 0 &&
 	  t != NULL &&
@@ -120,7 +120,7 @@ main(int argc,
 	  qg8_tensor_get_num_elems(t) == 65536
 	, "chunk 3 verify"
 	  /*chunk:
-	    type: QG8_TYPE_KET
+	    type: QG8_TYPE_CONSTANT
 	    flags: QG8_FLAG_LABEL
 	    name: 2D dense array
 	    tensor:
@@ -135,7 +135,7 @@ main(int argc,
 		c = qg8_graph_get_chunk(g, 3);
 		t = qg8_chunk_get_tensor(c);
 		dims = (uint64_t *) qg8_tensor_get_dims(t);
-	, qg8_chunk_get_type(c) == QG8_TYPE_KET &&
+	, qg8_chunk_get_type(c) == QG8_TYPE_CONSTANT &&
 	  qg8_chunk_get_flags(c) == QG8_FLAG_LABEL &&
 	  memcmp(qg8_chunk_get_string_id(c), "1D sparse array\0", 16) == 0 &&
 	  t != NULL &&
@@ -143,10 +143,10 @@ main(int argc,
 	  qg8_tensor_get_dtypeid(t) == QG8_DTYPE_UINT8 &&
 	  qg8_tensor_get_rank(t) == 1 &&
 	  dims[0] == 65536 &&
-	  qg8_tensor_get_num_elems(t) == 33024
+	  qg8_tensor_get_num_elems(t) == 32942
 	, "chunk 4 verify"
 	  /*chunk:
-	    type: QG8_TYPE_KET
+	    type: QG8_TYPE_CONSTANT
 	    flags: QG8_FLAG_LABEL
 	    name: 1D sparse array
 	    tensor:
@@ -154,14 +154,14 @@ main(int argc,
 	      dtype: QG8_DTYPE_UINT8
 	      rank: 1
 	      dimensions: 65536
-	      num elements: 33024*/
+	      num elements: 32942*/
 	);
 
 	TEST(
 		c = qg8_graph_get_chunk(g, 4);
 		t = qg8_chunk_get_tensor(c);
 		dims = (uint64_t *) qg8_tensor_get_dims(t);
-	, qg8_chunk_get_type(c) == QG8_TYPE_KET &&
+	, qg8_chunk_get_type(c) == QG8_TYPE_CONSTANT &&
 	  qg8_chunk_get_flags(c) == QG8_FLAG_LABEL &&
 	  memcmp(qg8_chunk_get_string_id(c), "constant\0\0\0\0\0\0\0\0", 16) == 0 &&
 	  t != NULL &&
@@ -172,7 +172,7 @@ main(int argc,
 	  qg8_tensor_get_num_elems(t) == 1
 	, "chunk 5 verify"
 	  /*chunk:
-	    type: QG8_TYPE_KET
+	    type: QG8_TYPE_CONSTANT
 	    flags: QG8_FLAG_LABEL
 	    name: constant
 	    tensor:
