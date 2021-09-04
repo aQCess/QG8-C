@@ -60,15 +60,24 @@ fail_tests () {
 	done
 }
 
+# to call a test program, use the following commands:
+# succeed_tests <folder> <prog1> <prog2> <...>
+#   for tests that must pass completely
+# fail_tests <folder> <prog1> <prog2> <...>
+#   for tests that must fail completely
+
 # tensor tests
 succeed_tests "tensor" "tensor_test"
 fail_tests "tensor" "bad_tensor1 bad_tensor2 bad_tensor3 bad_tensor4"
 
+# chunk tests
+succeed_tests "chunk" "chunk_test"
+
 # file tests
-succeed_tests "file" "file_write"
+succeed_tests "file" "file_write file_read"
 
 # graph tests
-succeed_tests "graph" "graph_load"
+succeed_tests "graph" "graph_load" "graph_create"
 
 echo "-- $passed/$total tests passed --"
 

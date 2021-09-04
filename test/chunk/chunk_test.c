@@ -1,9 +1,9 @@
 /*
- * file_write.c
- * Write chunks to file.
+ * chunk_test.c
+ * Chunk creation tests.
  *
  * Author       : Finn Rayment <finn@rayment.fr>
- * Date created : 25/07/2021
+ * Date created : 04/09/2021
  */
 
 /*
@@ -23,6 +23,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "common_test.h"
 #include "macros.h"
@@ -32,12 +33,12 @@ int
 main(int argc,
      char **argv)
 {
-	qg8_file *f;
 	qg8_chunk *c1, *c2;
 	qg8_tensor *t1, *t2;
 	uint64_t dims[3], dims2[2];
 	uint64_t **ind, **ind2;
-	int8_t re[2*2*2], re2[3];
+	int8_t re[2*2*2];
+	float re2[3], im2[3];
 	int i, j;
 
 	INIT();
@@ -72,42 +73,55 @@ main(int argc,
 	j = 0;
 	for (i = 0; i < 3; ++i)
 	{
-		ind2[0][i] = j++ % 2;
-		ind2[1][i] = i;
-		re2[i] = i;
+		ind2[0][i] = (float) (j++ % 2);
+		ind2[1][i] = (float) i;
+		re2[i] = (float) i;
+		im2[i] = re2[i] + 3.141592;
 	}
 
 	(void) argc;
 	(void) argv;
 
 	t1 = qg8_tensor_create_int8(ind, re, 8, dims, 3, QG8_PACKING_FULL);
-	t2 = qg8_tensor_create_int8(ind2, re2, 3, dims2, 2, QG8_PACKING_FULL);
-
-	c1 = qg8_chunk_create(QG8_TYPE_KET, 0, (uint8_t *) "chunk1", t1);
-	c2 = qg8_chunk_create(QG8_TYPE_KET, 0, (uint8_t *) "chunk2", t2);
+	t2 = qg8_tensor_create_float(ind2, re2, im2, 3, dims2, 2, QG8_PACKING_FULL);
 
 	TEST(
-		f = qg8_file_open("file/test_write.qg8", QG8_MODE_WRITE);
-	, f != NULL, "qg8_file_open"
+		c1 = qg8_chunk_create(QG8_TYPE_KET, 0, (uint8_t *) "chunk1", t1);
+		c2 = qg8_chunk_create(QG8_TYPE_KET, 0, (uint8_t *) "chunk2", t2);
+	, c1 != NULL && c2 != NULL, "qg8_chunk_create"
 	);
 
 	TEST(
-		i = qg8_file_write_chunk(f, c1) && qg8_file_write_chunk(f, c2);
-	, i == 1, "qg8_file_write_chunk"
+		;
+	, qg8_chunk_get_tensor(c1) == t1 &&
+	  qg8_chunk_get_tensor(c2) == t2, "qg8_chunk_get_tensor"
 	);
 
 	TEST(
-		i = qg8_file_flush(f);
-	, i == 1, "qg8_file_flush"
+		;
+	, qg8_chunk_get_flags(c1) == QG8_FLAG_LABEL &&
+	  qg8_chunk_get_flags(c2) == QG8_FLAG_LABEL, "qg8_chunk_get_flags"
 	);
 
 	TEST(
-		i = qg8_file_close(f);
-	, i == 1, "qg8_file_close"
+		;
+	, memcmp(qg8_chunk_get_string_id(c1), "chunk1", 6) == 0 &&
+	  memcmp(qg8_chunk_get_string_id(c2), "chunk2", 6) == 0,
+	  "qg8_chunk_get_string_id"
 	);
 
-	qg8_chunk_destroy(c1);
-	qg8_chunk_destroy(c2);
+	TEST(
+		;
+	, qg8_chunk_get_type(c1) == QG8_TYPE_KET &&
+	  qg8_chunk_get_type(c2) == QG8_TYPE_KET,
+	  "qg8_chunk_get_type"
+	);
+
+	TEST(
+		;
+	, qg8_chunk_destroy(c1) == 1 && qg8_chunk_destroy(c2) == 1,
+	  "qg8_chunk_destroy"
+	);
 
 	for (i = 0; i < 3; ++i)
 		free(ind[i]);
