@@ -6,27 +6,38 @@
 #
 
 # set DEBUG to 1 to turn on verbose messages
-DEBUG:=1
+DEBUG:=0
+
+# set USE_GSL to 1 to enable build of extra functions that rely on GSL
+# -- not currently implemented -- #
+USE_GSL:=0
 
 PREFIX:=/usr/local
 VERSION:=1.0.0
-LIBRARIES:=gsl
 
 CC:=cc
 CCFLAGS:=--std=c89# -Wno-error=stringop-truncation
 #-fsanitize=address -fno-omit-frame-pointer
 CXXFLAGS:=-Wall -Wextra -Wpedantic -Werror --pedantic-errors \
           -fPIC -O3 -DVERSION=\"${VERSION}\"
+INCLUDE:=-Iinclude
 ifeq ($(DEBUG),1)
 CXXFLAGS+=-g -DDEBUG=1
 endif
-LDFLAGS:=$(shell pkg-config --libs $(LIBRARIES)) -lm
+ifeq ($(USE_GSL),1)
+CXXFLAGS+=-DUSE_GSL=1
+LIBRARIES:=$(shell pkg-config --libs gsl)
+INCLUDE+=$(shell pkg-config --cflags gsl)
+else
+LIBRARIES:=
+endif
+
+LDFLAGS:=$(LIBRARIES) -lm
 
 SOURCES:=$(wildcard src/*.c) $(wildcard src/*/*.c)
 OBJECTS:=$(patsubst src/%,obj/%,\
          $(patsubst %.c,%.o,$(SOURCES)))
 HEADERS:=include/*.h
-INCLUDE:=-Iinclude $(shell pkg-config --cflags $(LIBRARIES))
 
 STATIC_LIB:=libqg8.a.$(VERSION)
 LINK_LIB:=libqg8.so
