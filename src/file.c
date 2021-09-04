@@ -307,48 +307,25 @@ qg8_file_flush(qg8_file *qg8f)
 			}
 			switch (tensor->dtype_id)
 			{
-			case QG8_DTYPE_FLOAT64:
-			case QG8_DTYPE_COMPLEX128:
-				fwrite(tensor->redouble, data_size, tensor->num_elems,
-				       qg8f->fp);
-				if (tensor->dtype_id == QG8_DTYPE_COMPLEX128)
-				{
-					fwrite(tensor->imdouble, data_size,
-					       tensor->num_elems, qg8f->fp);
-				}
-				break;
 			case QG8_DTYPE_FLOAT32:
+			case QG8_DTYPE_FLOAT64:
 			case QG8_DTYPE_COMPLEX64:
-				fwrite(tensor->refloat, data_size, tensor->num_elems, qg8f->fp);
-				if (tensor->dtype_id == QG8_DTYPE_COMPLEX64)
+			case QG8_DTYPE_COMPLEX128:
+			case QG8_DTYPE_UINT8:
+			case QG8_DTYPE_UINT16:
+			case QG8_DTYPE_UINT32:
+			case QG8_DTYPE_UINT64:
+			case QG8_DTYPE_INT8:
+			case QG8_DTYPE_INT16:
+			case QG8_DTYPE_INT32:
+			case QG8_DTYPE_INT64:
+				fwrite(tensor->redata, data_size, tensor->num_elems, qg8f->fp);
+				if (tensor->dtype_id == QG8_DTYPE_COMPLEX64 ||
+				    tensor->dtype_id == QG8_DTYPE_COMPLEX128)
 				{
-					fwrite(tensor->imfloat, data_size,
+					fwrite(tensor->imdata, data_size,
 					       tensor->num_elems, qg8f->fp);
 				}
-				break;
-			case QG8_DTYPE_UINT8:
-				fwrite(tensor->reu8, data_size, tensor->num_elems, qg8f->fp);
-				break;
-			case QG8_DTYPE_UINT16:
-				fwrite(tensor->reu16, data_size, tensor->num_elems, qg8f->fp);
-				break;
-			case QG8_DTYPE_UINT32:
-				fwrite(tensor->reu32, data_size, tensor->num_elems, qg8f->fp);
-				break;
-			case QG8_DTYPE_UINT64:
-				fwrite(tensor->reu64, data_size, tensor->num_elems, qg8f->fp);
-				break;
-			case QG8_DTYPE_INT8:
-				fwrite(tensor->rei8, data_size, tensor->num_elems, qg8f->fp);
-				break;
-			case QG8_DTYPE_INT16:
-				fwrite(tensor->rei16, data_size, tensor->num_elems, qg8f->fp);
-				break;
-			case QG8_DTYPE_INT32:
-				fwrite(tensor->rei32, data_size, tensor->num_elems, qg8f->fp);
-				break;
-			case QG8_DTYPE_INT64:
-				fwrite(tensor->rei64, data_size, tensor->num_elems, qg8f->fp);
 				break;
 			default:
 				fprintf(stderr, "Tried to write data with dtype %d to file.\n",

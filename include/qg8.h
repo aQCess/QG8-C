@@ -140,18 +140,8 @@ qg8_tensor_s
 	uint64_t *dimensions;
 	uint64_t num_elems;
 	uint64_t **indices;
-	double *redouble;
-	double *imdouble;
-	float *refloat;
-	float *imfloat;
-	uint8_t *reu8;
-	uint16_t *reu16;
-	uint32_t *reu32;
-	uint64_t *reu64;
-	int8_t *rei8;
-	int16_t *rei16;
-	int32_t *rei32;
-	int64_t *rei64;
+	void *redata;
+	void *imdata;
 } qg8_tensor;
 
 qg8_tensor *qg8_tensor_create_float(uint64_t **, float *, float *, uint64_t,

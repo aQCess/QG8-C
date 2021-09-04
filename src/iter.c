@@ -161,7 +161,7 @@ qg8_file_extract(qg8_iter *iter)
 	uint16_t u16;
 	uint8_t u8buf[16], tmp;
 	uint64_t u64;
-	size_t i;
+	size_t i, dsize;
 
 	/* return nothing on no iterator */
 	if (!iter)
@@ -252,106 +252,43 @@ qg8_file_extract(qg8_iter *iter)
 		iter->offset += sizeof(t->num_elems);
 		/* tensor data */
 		_load_indices(t, iter->f->fp, iter);
-		t->refloat = NULL;
-		t->imfloat = NULL;
-		t->redouble = NULL;
-		t->imdouble = NULL;
-		t->reu8 = NULL;
-		t->reu16 = NULL;
-		t->reu32 = NULL;
-		t->reu64 = NULL;
-		t->rei8 = NULL;
-		t->rei16 = NULL;
-		t->rei32 = NULL;
-		t->rei64 = NULL;
-		if (t->dtype_id == QG8_DTYPE_FLOAT64 ||
-		    t->dtype_id == QG8_DTYPE_COMPLEX128)
+		t->redata = NULL;
+		t->imdata = NULL;
+		switch (t->dtype_id)
 		{
-			t->redouble = (double *) malloc(sizeof(double) * t->num_elems);
-			ALLOC(t->redouble);
-			READNN(t->redouble, sizeof(double), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(double) * t->num_elems;
-			if (t->dtype_id == QG8_DTYPE_COMPLEX128)
-			{
-				t->imdouble = (double *) malloc(sizeof(double) * t->num_elems);
-				ALLOC(t->imdouble);
-				READNN(t->imdouble, sizeof(double), t->num_elems, iter->f->fp);
-				iter->offset += sizeof(double) * t->num_elems;
-			}
-		}
-		else if (t->dtype_id == QG8_DTYPE_FLOAT32 ||
-		         t->dtype_id == QG8_DTYPE_COMPLEX128)
-		{
-			t->refloat = (float *) malloc(sizeof(float) * t->num_elems);
-			ALLOC(t->refloat);
-			READNN(t->refloat, sizeof(float), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(float) * t->num_elems;
-			if (t->dtype_id == QG8_DTYPE_COMPLEX64)
-			{
-				t->imfloat = (float *) malloc(sizeof(float) * t->num_elems);
-				ALLOC(t->imfloat);
-				READNN(t->imfloat, sizeof(float), t->num_elems, iter->f->fp);
-				iter->offset += sizeof(float) * t->num_elems;
-			}
-		}
-		else if (t->dtype_id == QG8_DTYPE_UINT8)
-		{
-			t->reu8 = (uint8_t *) malloc(sizeof(uint8_t) * t->num_elems);
-			ALLOC(t->reu8);
-			READNN(t->reu8, sizeof(uint8_t), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(uint8_t) * t->num_elems;
-		}
-		else if (t->dtype_id == QG8_DTYPE_UINT16)
-		{
-			t->reu16 = (uint16_t *) malloc(sizeof(uint16_t) * t->num_elems);
-			ALLOC(t->reu16);
-			READNN(t->reu16, sizeof(uint16_t), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(uint16_t) * t->num_elems;
-		}
-		else if (t->dtype_id == QG8_DTYPE_UINT32)
-		{
-			t->reu32 = (uint32_t *) malloc(sizeof(uint32_t) * t->num_elems);
-			ALLOC(t->reu32);
-			READNN(t->reu32, sizeof(uint32_t), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(uint32_t) * t->num_elems;
-		}
-		else if (t->dtype_id == QG8_DTYPE_UINT64)
-		{
-			t->reu64 = (uint64_t *) malloc(sizeof(uint64_t) * t->num_elems);
-			ALLOC(t->reu64);
-			READNN(t->reu64, sizeof(uint64_t), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(uint64_t) * t->num_elems;
-		}
-		else if (t->dtype_id == QG8_DTYPE_INT8)
-		{
-			t->rei8 = (int8_t *) malloc(sizeof(int8_t) * t->num_elems);
-			ALLOC(t->rei8);
-			READNN(t->rei8, sizeof(int8_t), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(int8_t) * t->num_elems;
-		}
-		else if (t->dtype_id == QG8_DTYPE_INT16)
-		{
-			t->rei16 = (int16_t *) malloc(sizeof(int16_t) * t->num_elems);
-			ALLOC(t->rei16);
-			READNN(t->rei16, sizeof(int16_t), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(int16_t) * t->num_elems;
-		}
-		else if (t->dtype_id == QG8_DTYPE_INT32)
-		{
-			t->rei32 = (int32_t *) malloc(sizeof(int32_t) * t->num_elems);
-			ALLOC(t->rei32);
-			READNN(t->rei32, sizeof(int32_t), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(int32_t) * t->num_elems;
-		}
-		else if (t->dtype_id == QG8_DTYPE_INT64)
-		{
-			t->rei64 = (int64_t *) malloc(sizeof(int64_t) * t->num_elems);
-			ALLOC(t->rei64);
-			READNN(t->rei64, sizeof(int64_t), t->num_elems, iter->f->fp);
-			iter->offset += sizeof(int64_t) * t->num_elems;
-		}
-		else
-		{
+		case QG8_DTYPE_FLOAT64:
+		case QG8_DTYPE_COMPLEX128:
+			dsize = sizeof(double);
+			break;
+		case QG8_DTYPE_FLOAT32:
+		case QG8_DTYPE_COMPLEX64:
+			dsize = sizeof(float);
+			break;
+		case QG8_DTYPE_UINT8:
+			dsize = sizeof(uint8_t);
+			break;
+		case QG8_DTYPE_UINT16:
+			dsize = sizeof(uint16_t);
+			break;
+		case QG8_DTYPE_UINT32:
+			dsize = sizeof(uint32_t);
+			break;
+		case QG8_DTYPE_UINT64:
+			dsize = sizeof(uint64_t);
+			break;
+		case QG8_DTYPE_INT8:
+			dsize = sizeof(int8_t);
+			break;
+		case QG8_DTYPE_INT16:
+			dsize = sizeof(int16_t);
+			break;
+		case QG8_DTYPE_INT32:
+			dsize = sizeof(int32_t);
+			break;
+		case QG8_DTYPE_INT64:
+			dsize = sizeof(int64_t);
+			break;
+		default:
 			/* error on any other dtype_id */
 			free(t->indices);
 			free(t->dimensions);
@@ -361,6 +298,19 @@ qg8_file_extract(qg8_iter *iter)
 			        "Received unrecognised dtype_id %d for chunk tensor data.\n"
 			        , t->dtype_id);
 			exit(EXIT_FAILURE);
+		}
+		t->redata = malloc(dsize * t->num_elems);
+		ALLOC(t->redata);
+		READNN(t->redata, dsize, t->num_elems, iter->f->fp);
+		iter->offset += dsize * t->num_elems;
+		if (t->dtype_id == QG8_DTYPE_COMPLEX64 ||
+		    t->dtype_id == QG8_DTYPE_COMPLEX128)
+		{
+			/* also do imaginary part for complex numbers */
+			t->imdata = malloc(dsize * t->num_elems);
+			ALLOC(t->imdata);
+			READNN(t->imdata, dsize, t->num_elems, iter->f->fp);
+			iter->offset += dsize * t->num_elems;
 		}
 		chunk->tensor = t;
 	}

@@ -28,7 +28,7 @@
 #include "macros.h"
 #include "qg8.h"
 
-#define CREATE_FUNC(x,y,z,w) \
+#define CREATE_FUNC(x,y,z) \
 qg8_tensor * \
 qg8_tensor_create_##x(uint64_t **indices, \
                         y *re, \
@@ -43,7 +43,7 @@ qg8_tensor_create_##x(uint64_t **indices, \
 	ALLOC(t); \
 	_common_create(t, re, indices, length, shape, rank, packing); \
 \
-	t->w = re; \
+	t->redata = re; \
 	t->dtype_id = z; \
 \
 	return t; \
@@ -119,18 +119,8 @@ _common_create(qg8_tensor *t,
 	t->indices = indices;
 	t->packing = packing;
 	t->itype_id = _tensor_index_size(t);
-	t->refloat = NULL;
-	t->imfloat = NULL;
-	t->redouble = NULL;
-	t->imdouble = NULL;
-	t->reu8 = NULL;
-	t->reu16 = NULL;
-	t->reu32 = NULL;
-	t->reu64 = NULL;
-	t->rei8 = NULL;
-	t->rei16 = NULL;
-	t->rei32 = NULL;
-	t->rei64 = NULL;
+	t->redata = NULL;
+	t->imdata = NULL;
 }
 
 qg8_tensor *
@@ -148,10 +138,10 @@ qg8_tensor_create_float(uint64_t **indices,
 	ALLOC(t);
 	_common_create(t, re, indices, length, shape, rank, packing);
 
-	t->refloat = re;
+	t->redata = re;
 	if (im)
 	{
-		t->imfloat = im;
+		t->imdata = im;
 		t->dtype_id = QG8_DTYPE_COMPLEX64;
 	}
 	else
@@ -177,10 +167,10 @@ qg8_tensor_create_double(uint64_t **indices,
 	ALLOC(t);
 	_common_create(t, re, indices, length, shape, rank, packing);
 
-	t->redouble = re;
+	t->redata = re;
 	if (im)
 	{
-		t->imdouble = im;
+		t->imdata = im;
 		t->dtype_id = QG8_DTYPE_COMPLEX128;
 	}
 	else
@@ -192,14 +182,14 @@ qg8_tensor_create_double(uint64_t **indices,
 }
 
 /* fat macro expander */
-CREATE_FUNC(uint8, uint8_t, QG8_DTYPE_UINT8, reu8)
-CREATE_FUNC(uint16, uint16_t, QG8_DTYPE_UINT16, reu16)
-CREATE_FUNC(uint32, uint32_t, QG8_DTYPE_UINT32, reu32)
-CREATE_FUNC(uint64, uint64_t, QG8_DTYPE_UINT64, reu64)
-CREATE_FUNC(int8, int8_t, QG8_DTYPE_INT8, rei8)
-CREATE_FUNC(int16, int16_t, QG8_DTYPE_INT16, rei16)
-CREATE_FUNC(int32, int32_t, QG8_DTYPE_INT32, rei32)
-CREATE_FUNC(int64, int64_t, QG8_DTYPE_INT64, rei64)
+CREATE_FUNC(uint8, uint8_t, QG8_DTYPE_UINT8)
+CREATE_FUNC(uint16, uint16_t, QG8_DTYPE_UINT16)
+CREATE_FUNC(uint32, uint32_t, QG8_DTYPE_UINT32)
+CREATE_FUNC(uint64, uint64_t, QG8_DTYPE_UINT64)
+CREATE_FUNC(int8, int8_t, QG8_DTYPE_INT8)
+CREATE_FUNC(int16, int16_t, QG8_DTYPE_INT16)
+CREATE_FUNC(int32, int32_t, QG8_DTYPE_INT32)
+CREATE_FUNC(int64, int64_t, QG8_DTYPE_INT64)
 
 int
 qg8_tensor_destroy(qg8_tensor *t)
@@ -217,30 +207,10 @@ qg8_tensor_destroy(qg8_tensor *t)
 		for (i = 0; i < t->rank; ++i)
 			free(*(t->indices+i));
 		free(t->indices);
-		if (t->redouble)
-			free(t->redouble);
-		if (t->imdouble)
-			free(t->imdouble);
-		if (t->refloat)
-			free(t->refloat);
-		if (t->imfloat)
-			free(t->imfloat);
-		if (t->reu8)
-			free(t->reu8);
-		if (t->reu16)
-			free(t->reu16);
-		if (t->reu32)
-			free(t->reu32);
-		if (t->reu64)
-			free(t->reu64);
-		if (t->rei8)
-			free(t->rei8);
-		if (t->rei16)
-			free(t->rei16);
-		if (t->rei32)
-			free(t->rei32);
-		if (t->rei64)
-			free(t->rei64);
+		if (t->redata)
+			free(t->redata);
+		if (t->imdata)
+			free(t->imdata);
 	}
 	free(t);
 	return 1;
@@ -317,26 +287,17 @@ qg8_tensor_get_re(qg8_tensor *t)
 	{
 	case QG8_DTYPE_FLOAT64: /* fall-through */
 	case QG8_DTYPE_COMPLEX128:
-		return (void *) t->redouble;
 	case QG8_DTYPE_FLOAT32:
 	case QG8_DTYPE_COMPLEX64:
-		return (void *) t->refloat;
 	case QG8_DTYPE_UINT8:
-		return (void *) t->reu8;
 	case QG8_DTYPE_UINT16:
-		return (void *) t->reu16;
 	case QG8_DTYPE_UINT32:
-		return (void *) t->reu32;
 	case QG8_DTYPE_UINT64:
-		return (void *) t->reu64;
 	case QG8_DTYPE_INT8:
-		return (void *) t->rei8;
 	case QG8_DTYPE_INT16:
-		return (void *) t->rei16;
 	case QG8_DTYPE_INT32:
-		return (void *) t->rei32;
 	case QG8_DTYPE_INT64:
-		return (void *) t->rei64;
+		return t->redata;
 	default:
 		return NULL;
 	}
@@ -349,11 +310,13 @@ qg8_tensor_get_im(qg8_tensor *t)
 	{
 		DIE("Cannot get imaginary data from a NULL tensor.\n");
 	}
-	if (t->dtype_id == QG8_DTYPE_COMPLEX128)
-		return (void *) t->imdouble;
-	else if (t->dtype_id == QG8_DTYPE_COMPLEX64)
-		return (void *) t->imfloat;
-	else
+	switch (t->dtype_id)
+	{
+	case QG8_DTYPE_COMPLEX64:
+	case QG8_DTYPE_COMPLEX128:
+		return t->imdata;
+	default:
 		return NULL;
+	}
 }
 
