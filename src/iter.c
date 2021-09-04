@@ -183,16 +183,20 @@ qg8_file_extract(qg8_iter *iter)
 	ALLOC(chunk);
 	chunk->tensor = NULL;
 	/* chunk header */
-	printf("-- chunk --\n");
 	READ(&chunk->type, chunk->type, iter->f->fp);
-	printf("type: %d\n", chunk->type);
 	READ(&chunk->flags, chunk->flags, iter->f->fp);
+#ifdef DEBUG
+	printf("-- chunk --\n");
+	printf("type: %d\n", chunk->type);
 	printf("flags: %d\n", chunk->flags);
+#endif /* DEBUG */
 	if ((chunk->flags & QG8_FLAG_LABEL) == QG8_FLAG_LABEL)
 	{
 		READN(chunk->string_id, 16, iter->f->fp);
 		iter->offset += 16;
+#ifdef DEBUG
 		printf("id: '%.*s'\n", 16, chunk->string_id);
+#endif /* DEBUG */
 	}
 	else
 	{
@@ -200,7 +204,9 @@ qg8_file_extract(qg8_iter *iter)
 	}
 	READN(u8buf, 5, iter->f->fp);
 	READ(&u64, u64, iter->f->fp);
+#ifdef DEBUG
 	printf("skip: %lu\n", u64);
+#endif /* DEBUG */
 	/* type (u16), reserved + flags (6), skip (u64) */
 	iter->offset += sizeof(u16) + 1 + 5 + sizeof(u64);
 	/* if skip is 0, there's no tensor because the chunk is done */
@@ -210,15 +216,17 @@ qg8_file_extract(qg8_iter *iter)
 		t = (qg8_tensor *) malloc(sizeof(qg8_tensor));
 		t->loaded = 1;
 		ALLOC(t);
-		printf("-- tensor --\n");
 		READ(&t->packing, t->packing, iter->f->fp);
-		printf("packing: %d\n", t->packing);
 		READ(&t->itype_id, t->itype_id, iter->f->fp);
-		printf("itype: %d\n", t->itype_id);
 		READ(&t->dtype_id, t->dtype_id, iter->f->fp);
-		printf("dtype_id: %d\n", t->dtype_id);
 		READ(&t->rank, t->rank, iter->f->fp);
+#ifdef DEBUG
+		printf("-- tensor --\n");
+		printf("packing: %d\n", t->packing);
+		printf("itype: %d\n", t->itype_id);
+		printf("dtype_id: %d\n", t->dtype_id);
 		printf("rank: %u\n", t->rank);
+#endif /* DEBUG */
 		iter->offset += sizeof(t->packing) + sizeof(t->itype_id) +
 		                sizeof(t->dtype_id) + sizeof(t->rank);
 		READN(u8buf, 3, iter->f->fp);
@@ -232,11 +240,15 @@ qg8_file_extract(qg8_iter *iter)
 		{
 			*(t->dimensions+i) = 0;
 			READN(t->dimensions+i, tmp, iter->f->fp);
+#ifdef DEBUG
 			printf("dimension %lu: %lu\n", i, *(t->dimensions+i));
+#endif /* DEBUG */
 			iter->offset += tmp;
 		}
 		READ(&t->num_elems, t->num_elems, iter->f->fp);
+#ifdef DEBUG
 		printf("num_elems: %lu\n", t->num_elems);
+#endif /* DEBUG */
 		iter->offset += sizeof(t->num_elems);
 		/* tensor data */
 		_load_indices(t, iter->f->fp, iter);

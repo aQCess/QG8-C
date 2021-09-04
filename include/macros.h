@@ -25,6 +25,11 @@
 #ifndef _FR_RAYMENT_MACROS_H_
 #define _FR_RAYMENT_MACROS_H_ 1
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,6 +61,10 @@ _shape##x(z *data, \
 
 void _size_check(size_t, size_t, int);
 uint8_t _type_to_size(uint8_t);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* _FR_RAYMENT_MACROS_H_ */
 

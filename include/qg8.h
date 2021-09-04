@@ -25,6 +25,11 @@
 #ifndef _FR_RAYMENT_QG8_H_
 #define _FR_RAYMENT_QG8_H_ 1
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 #include <stdint.h>
 #include <stdio.h>
 
@@ -300,6 +305,10 @@ int qg8_file_has_next(qg8_iter *);
 int qg8_file_next(qg8_iter *);
 
 qg8_chunk *qg8_file_extract(qg8_iter *);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* _FR_RAYMENT_QG8_H_ */
 
