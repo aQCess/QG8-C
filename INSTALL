@@ -6,6 +6,11 @@ The following requirements must be met to compile qg8:
   - GNU Make (recommended).
   - GNU GSL (recommended for addons).
 
+With GSL installed:
+  - Edit the Makefile variable USE_GSL and set it to 1, then follow the
+    instructions below. This will compile the library with GSL-extended
+    functionality.
+
 Using GNU Make:
   - Go to the project root directory and run `make` to compile the library.
   - Now run `make install` to install the library and headers.
