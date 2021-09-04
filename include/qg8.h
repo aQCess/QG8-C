@@ -146,51 +146,33 @@ qg8_tensor_s
 
 qg8_tensor *qg8_tensor_create_float(uint64_t **, float *, float *, uint64_t,
                                     uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_double(uint64_t **, double *, double *, uint64_t,
                                      uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_uint8(uint64_t **, uint8_t *, uint64_t,
                                     uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_uint16(uint64_t **, uint16_t *, uint64_t,
                                      uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_uint32(uint64_t **, uint32_t *, uint64_t,
                                      uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_uint64(uint64_t **, uint64_t *, uint64_t,
                                      uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_int8(uint64_t **, int8_t *, uint64_t,
                                    uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_int16(uint64_t **, int16_t *, uint64_t,
                                     uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_int32(uint64_t **, int32_t *, uint64_t,
                                      uint64_t *, uint8_t, uint8_t);
-
 qg8_tensor *qg8_tensor_create_int64(uint64_t **, int64_t *, uint64_t,
                                      uint64_t *, uint8_t, uint8_t);
-
-int qg8_tensor_destroy(qg8_tensor *);
-
-uint16_t qg8_tensor_get_rank(qg8_tensor *);
-
-uint64_t **qg8_tensor_get_indices(qg8_tensor *);
-
-uint64_t qg8_tensor_get_num_elems(qg8_tensor *);
-
-uint8_t qg8_tensor_get_dtypeid(qg8_tensor *);
-
-uint8_t qg8_tensor_get_itypeid(qg8_tensor *);
-
-void *qg8_tensor_get_dims(qg8_tensor *);
-
-void *qg8_tensor_get_re(qg8_tensor *);
-
-void *qg8_tensor_get_im(qg8_tensor *);
+int         qg8_tensor_destroy(qg8_tensor *);
+uint16_t    qg8_tensor_get_rank(qg8_tensor *);
+uint64_t  **qg8_tensor_get_indices(qg8_tensor *);
+uint64_t    qg8_tensor_get_num_elems(qg8_tensor *);
+uint8_t     qg8_tensor_get_dtypeid(qg8_tensor *);
+uint8_t     qg8_tensor_get_itypeid(qg8_tensor *);
+void       *qg8_tensor_get_dims(qg8_tensor *);
+void       *qg8_tensor_get_re(qg8_tensor *);
+void       *qg8_tensor_get_im(qg8_tensor *);
 
 /* Adjacency matrices */
 
@@ -214,17 +196,12 @@ qg8_chunk_linkedlist_s
 	struct qg8_chunk_linkedlist_s *next;
 } qg8_chunk_linkedlist;
 
-qg8_chunk *qg8_chunk_create(uint16_t, uint8_t, uint8_t *, qg8_tensor *);
-
-int qg8_chunk_destroy(qg8_chunk *);
-
+qg8_chunk  *qg8_chunk_create(uint16_t, uint8_t, uint8_t *, qg8_tensor *);
+int         qg8_chunk_destroy(qg8_chunk *);
 qg8_tensor *qg8_chunk_get_tensor(qg8_chunk *);
-
-uint8_t qg8_chunk_get_flags(qg8_chunk *);
-
-uint8_t *qg8_chunk_get_string_id(qg8_chunk *);
-
-uint16_t qg8_chunk_get_type(qg8_chunk *);
+uint8_t     qg8_chunk_get_flags(qg8_chunk *);
+uint8_t    *qg8_chunk_get_string_id(qg8_chunk *);
+uint16_t    qg8_chunk_get_type(qg8_chunk *);
 
 /* Graph */
 
@@ -246,37 +223,25 @@ qg8_graph_s
 } qg8_graph;
 
 qg8_graph *qg8_graph_load(const char *);
-
 qg8_graph *qg8_graph_create(void);
-
-int qg8_graph_write(const char *, qg8_graph *);
-
-int qg8_graph_destroy(qg8_graph *);
-
-uint8_t qg8_graph_get_datasize(qg8_graph *);
+int        qg8_graph_write(const char *, qg8_graph *);
+int        qg8_graph_destroy(qg8_graph *);
+uint64_t   qg8_graph_get_number_chunks(qg8_graph *);
+qg8_chunk *qg8_graph_get_chunk(qg8_graph *, uint64_t);
+int        qg8_graph_add_chunk(qg8_graph *, qg8_chunk *);
+int        qg8_graph_remove_chunk(qg8_graph *, qg8_chunk *);
 
 /* TODO */
-qg8_adjacencymatrix *qg8_graph_get_edges(qg8_graph *);
-
-uint64_t qg8_graph_get_number_chunks(qg8_graph *);
-
-qg8_chunk *qg8_graph_get_chunk(qg8_graph *, uint64_t);
-
-int qg8_graph_remove_chunk(qg8_graph *, qg8_chunk *);
-
-int qg8_graph_add_chunk(qg8_graph *, qg8_chunk *);
+/*qg8_adjacencymatrix *qg8_graph_get_edges(qg8_graph *);*/
+/*uint8_t    qg8_graph_get_datasize(qg8_graph *);*/
 
 /* File I/O */
 
-qg8_file *qg8_file_open(const char *, int);
-
+qg8_file   *qg8_file_open(const char *, int);
 qg8_tensor *qg8_file_read(qg8_file *, uint64_t *);
-
-int qg8_file_write_chunk(qg8_file *, qg8_chunk *);
-
-int qg8_file_flush(qg8_file *);
-
-int qg8_file_close(qg8_file *);
+int         qg8_file_write_chunk(qg8_file *, qg8_chunk *);
+int         qg8_file_flush(qg8_file *);
+int         qg8_file_close(qg8_file *);
 
 /* Iterators */
 
@@ -288,12 +253,9 @@ qg8_iter_s
 	int done_read;
 } qg8_iter;
 
-qg8_iter qg8_file_iterator(qg8_file *);
-
-int qg8_file_has_next(qg8_iter *);
-
-int qg8_file_next(qg8_iter *);
-
+qg8_iter   qg8_file_iterator(qg8_file *);
+int        qg8_file_has_next(qg8_iter *);
+int        qg8_file_next(qg8_iter *);
 qg8_chunk *qg8_file_extract(qg8_iter *);
 
 #ifdef __cplusplus

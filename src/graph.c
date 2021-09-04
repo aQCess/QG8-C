@@ -242,9 +242,13 @@ qg8_graph_get_number_chunks(qg8_graph *graph)
 {
 	uint64_t i;
 	qg8_chunk_linkedlist *l;
-	if (!graph || !graph->chunks)
+	if (!graph)
 	{
 		DIE("Cannot get number of chunks from a NULL graph.\n");
+	}
+	else if (!graph->chunks)
+	{
+		return 0;
 	}
 	i = 0;
 	l = graph->chunks;
@@ -316,19 +320,20 @@ qg8_graph_remove_chunk(qg8_graph *graph,
 	removed = 0;
 	while (l)
 	{
-		if (l->chunk != chunk)
+		if (l->chunk == chunk)
 		{
-			last = l;
-			++idx;
-			continue;
+			if (idx == 0)
+				graph->chunks = graph->chunks->next;
+			else
+				last->next = l->next;
+			qg8_chunk_destroy(chunk);
+			free(l);
+			removed = 1;
+			break;
 		}
-		if (idx == 0)
-			graph->chunks = graph->chunks->next;
-		else
-			last->next = l->next;
-		qg8_chunk_destroy(l->chunk);
-		free(l);
-		removed = 1;
+		++idx;
+		last = l;
+		l = l->next;
 	}
 	return removed;
 }
